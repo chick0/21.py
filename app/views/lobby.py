@@ -1,7 +1,5 @@
 
 from flask import Blueprint
-from flask import redirect
-from flask import url_for
 from flask import render_template
 
 bp = Blueprint(
@@ -13,5 +11,11 @@ bp = Blueprint(
 
 @bp.route("/")
 def index():
-    return redirect(url_for("game.new_game"))
-    # return "lobby.index"
+    return render_template(
+        "lobby/index.html"
+    )
+
+
+@bp.route("/rule")
+def rule():
+    return "lobby.rule"

@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="container">
+        <div class="py-3">
+            <h1 class="display-1">21</h1>
+            <p class="lead">21은 심플한 카드 게임 입니다.</p>
+            <p><a class="btn btn-primary" href="{{ url_for('game.new_game') }}">게임 시작</a></p>
+        </div>
+
+        <div class="py-4">
+            <h2 class="display-3">규칙</h2>
+            <p class="lead">21은 블랙잭과 규칙이 유사하지만 동일하지 않습니다.</p>
+
+            <p><a class="btn btn-warning" href="{{ url_for('lobby.rule') }}">규칙 읽어보기</a></p>
+        </div>
+    </div>
+{% endblock %}
