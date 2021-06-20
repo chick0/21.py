@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="container">
+        <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
+        <p class="lead">합계: {{ [ game['you']['hand'][0] ]|calc_total }}</p>
+
+        <div>
+            <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" class="img-fluid" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
+        {% for i in range(0, game['you']['hand']|length -1) %}
+            <img src="/static/card_img/back.png" class="img-fluid" alt="Hidden Card">
+        {% endfor %}
+        </div>
+
+        <hr>
+
+        <h4><span class="badge bg-info">나</span> {{ game['me']['name'] }}</h4>
+        <p class="lead">합계: {{ game['me']['hand']|calc_total }}</p>
+
+        <div>
+        {% for card in game['me']['hand'] %}
+            <img src="/static/card_img/{{card}}.png" class="img-fluid" alt="{{ card|get_display_card_name }}">
+        {% endfor %}
+        </div>
+
+        <br>
+        <div class="d-grid gap-2">
+            <div class="btn-group">
+                <a class="btn btn-primary" href="?do=hit">Hit</a>
+                <a class="btn btn-danger" href="?do=stand">Stand</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
