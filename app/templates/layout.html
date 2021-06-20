@@ -8,6 +8,12 @@
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
 
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    {% if game is not none %}
+        <style>
+            img{ width:130px }
+            @media(max-width:420px){ img{ width:65px; } }
+        </style>
+    {% endif %}
     </head>
     <body>
         {% block content %}{% endblock %}
