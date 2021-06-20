@@ -18,4 +18,6 @@ def index():
 
 @bp.route("/rule")
 def rule():
-    return "lobby.rule"
+    return render_template(
+        "lobby/rule.html"
+    )
