@@ -33,17 +33,14 @@ def new_game():
 
     session_id = str(uuid4())
     session[session_id] = {
-        "round": 1,
         "card": card,
         "you": {
             "name": get_nickname(),
             "hand": [computer],
-            "hit_or_stand": None
         },
         "me": {
             "name": get_nickname(),
             "hand": [me],
-            "hit_or_stand": None
         }
     }
 
