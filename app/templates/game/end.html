@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="container">
+        <div class="alert {{ win|get_alert_class }}">
+            <h4 class="alert-heading">{{ win|get_win_string }}</h4>
+            {{ reason|safe }}
+            <hr>
+            <p class="mb-0"><a href="{{ url_for('game.new_game') }}" class="btn btn-primary">새로운 게임</a></p>
+        </div>
+
         <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
         <p class="lead">합계: {{ game['you']['hand']|calc_total }}</p>
 
@@ -12,13 +19,6 @@
 
         <hr>
 
-        <div class="alert {{ win|get_alert_class }}">
-            <h4 class="alert-heading">{{ win|get_win_string }}</h4>
-            {{ reason|safe }}
-            <hr>
-            <p class="mb-0"><a href="{{ url_for('game.new_game') }}" class="btn btn-primary">새로운 게임</a></p>
-        </div>
-
         <h4><span class="badge bg-info">나</span> {{ game['me']['name'] }}</h4>
         <p class="lead">합계: {{ game['me']['hand']|calc_total }}</p>
 
@@ -26,6 +26,14 @@
         {% for card in game['me']['hand'] %}
             <img src="/static/card_img/{{card}}.png" alt="{{ card|get_display_card_name }}">
         {% endfor %}
+        </div>
+
+        <br>
+        <div class="d-grid gap-2">
+            <div class="btn-group">
+                <a class="btn btn-primary">Hit</a>
+                <a class="btn btn-danger">Stand</a>
+            </div>
         </div>
     </div>
 {% endblock %}
