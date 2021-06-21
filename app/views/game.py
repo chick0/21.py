@@ -96,7 +96,7 @@ def end(session_id: str):
         reason = f"축하드립니다! <b>{game['you']['name']}</b>(이) 보다 큰 숫자를 만들었습니다!"
     else:
         win = None
-        reason = "무승부..."
+        reason = ""
 
     del session[session_id]
     return render_template(

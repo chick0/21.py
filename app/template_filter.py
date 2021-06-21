@@ -28,4 +28,4 @@ def get_win_string(win: bool) -> str:
     elif win is False:
         return "패배..."
     else:
-        return "무승부."
+        return "무승부"
