@@ -6,7 +6,7 @@ from flask import redirect
 from flask import url_for
 
 from app.card import calc_total
-from app.template_filter import get_display_card_name
+from app.card import get_display_card_name
 
 bp = Blueprint(
     name="api",

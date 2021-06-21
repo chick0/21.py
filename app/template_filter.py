@@ -1,22 +1,6 @@
 def get_display_card_name(card: str) -> str:
-    s, n = card
-    s = {
-        "C": "Clubs",
-        "D": "Diamonds",
-        "H": "Hearts",
-        "S": "Spaces"
-    }.get(s)
-
-    n = {
-        "X": "10",
-
-        "A": "Ace",
-        "J": "Jack",
-        "Q": "Queen",
-        "K": "King",
-    }.get(n, n)
-
-    return f"{s} {n}"
+    from .card import get_display_card_name
+    return get_display_card_name(card=card)
 
 
 def get_number(card: str) -> str:
