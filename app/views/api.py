@@ -23,6 +23,11 @@ def hit(session_id):
             "game": "not found"
         })
 
+    if calc_total(hand=game['me']['hand']) > 21:
+        return jsonify({
+            "game": "bust"
+        })
+
     you_hit = False
     if calc_total(hand=game['you']['hand']) < 16:
         your_card = game['card'].pop()
