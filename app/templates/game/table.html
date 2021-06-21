@@ -46,12 +46,14 @@
                         var you = document.createElement("img");
                         you.setAttribute("src", "/static/card_img/back.png");
                         you.setAttribute("alt", "Hidden Card");
+                        document.getElementById("my_hand").appendChild(document.createTextNode(" "));
                         document.getElementById("you_hand").appendChild(you);
                     }
 
                     var me = document.createElement("img");
                     me.setAttribute("src", resp.data.new_card.me.src);
                     me.setAttribute("alt", resp.data.new_card.me.alt);
+                    document.getElementById("my_hand").appendChild(document.createTextNode(" "));
                     document.getElementById("my_hand").appendChild(me);
                     document.getElementById("my_total").innerText=resp.data.new_card.me.total;
                 }
