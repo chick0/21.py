@@ -2,7 +2,6 @@ from uuid import uuid4
 from random import shuffle
 
 from flask import Blueprint
-from flask import request
 from flask import session
 from flask import url_for
 from flask import redirect
@@ -58,42 +57,10 @@ def table(session_id):
     if game['playing'] is False:
         return redirect(url_for("game.end", session_id=session_id))
 
-    do = request.args.get("do")
-    if do == "hit":
-        if calc_total(hand=game['you']['hand']) < 16:
-            your_card = game['card'].pop()
-            game['you']['hand'].append(your_card)
-            del your_card
-
-        my_card = game['card'].pop()
-        game['me']['hand'].append(my_card)
-        del my_card
-
-        "hit!"
-        session[session_id] = game
-
-        if calc_total(hand=game['me']['hand']) > 21:
-            return redirect(url_for("game.table", session_id=session_id, do="stand"))
-    elif do == "stand":
-        while True:
-            if calc_total(hand=game['you']['hand']) < 16:
-                your_card = game['card'].pop()
-                game['you']['hand'].append(your_card)
-                del your_card
-            else:
-                break
-
-        # game is end!
-        game['playing'] = False
-
-        "stand!"
-        session[session_id] = game
-
-        return redirect(url_for("game.end", session_id=session_id))
-
     return render_template(
         "game/table.html",
-        game=game
+        game=game,
+        session_id=session_id
     )
 
 

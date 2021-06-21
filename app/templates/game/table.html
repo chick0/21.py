@@ -2,9 +2,9 @@
 {% block content %}
     <div class="container">
         <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
-        <p class="lead">합계: {{ [ game['you']['hand'][0] ]|calc_total }}</p>
+        <p class="lead">합계: <b>{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
 
-        <div>
+        <div id="you_hand">
             <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
         {% for i in range(0, game['you']['hand']|length -1) %}
             <img src="/static/card_img/back.png" alt="Hidden Card">
@@ -14,9 +14,9 @@
         <hr>
 
         <h4><span class="badge bg-info">나</span> {{ game['me']['name'] }}</h4>
-        <p class="lead">합계: {{ game['me']['hand']|calc_total }}</p>
+        <p class="lead">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</p>
 
-        <div>
+        <div id="my_hand">
         {% for card in game['me']['hand'] %}
             <img src="/static/card_img/{{card}}.png" alt="{{ card|get_display_card_name }}">
         {% endfor %}
@@ -25,9 +25,49 @@
         <br>
         <div class="d-grid gap-2">
             <div class="btn-group">
-                <a class="btn btn-primary" href="?do=hit">Hit</a>
-                <a class="btn btn-danger" href="?do=stand">Stand</a>
+                <button class="btn btn-primary" id="hit">Hit</button>
+                <button class="btn btn-danger" id="stand">Stand</button>
             </div>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
+    <script>
+        const hit = document.getElementById("hit");
+        const stand = document.getElementById("stand");
+
+        hit.addEventListener("click", function(event){
+            axios({
+                method: "GET",
+                url: "{{ url_for('api.hit', session_id=session_id) }}"
+            }).then(function(resp){
+                if(resp.data.game == "ok"){
+                    if(resp.data.new_card.you){
+                        var you = document.createElement("img");
+                        you.setAttribute("src", "/static/card_img/back.png");
+                        you.setAttribute("alt", "Hidden Card");
+                        document.getElementById("you_hand").appendChild(you);
+                    }
+
+                    var me = document.createElement("img");
+                    me.setAttribute("src", resp.data.new_card.me.src);
+                    me.setAttribute("alt", resp.data.new_card.me.alt);
+                    document.getElementById("my_hand").appendChild(me);
+                    document.getElementById("my_total").innerText=resp.data.new_card.me.total;
+                }
+                else if(resp.data.game == "not found"){
+                    location.replace("/game/new");
+                }
+                else if(resp.data.game == "bust"){
+                    location.replace("{{ url_for('api.stand', session_id=session_id) }}");
+                }
+            }).catch(function(err){
+                window.alert("오류가 발생했습니다. 버튼을 다시 눌러주십시오.");
+            });
+        });
+
+        stand.addEventListener("click", function(event){
+            location.replace("{{ url_for('api.stand', session_id=session_id) }}");
+        });
+    </script>
 {% endblock %}
