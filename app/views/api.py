@@ -1,3 +1,4 @@
+from random import choice
 
 from flask import Blueprint
 from flask import session
@@ -15,6 +16,21 @@ bp = Blueprint(
 )
 
 
+def hit_or_stand(total: int) -> bool:
+    if total <= 14:
+        return True
+    else:
+        do_hit = [True] * 21
+
+        if total > 21:
+            total = 21
+
+        for i in range(0, total):
+            do_hit[i] = False
+
+        return choice(do_hit)
+
+
 @bp.route("/hit/<string:session_id>")
 def hit(session_id):
     game = session.get(session_id, None)
@@ -29,12 +45,14 @@ def hit(session_id):
         })
 
     you_hit = False
-    if calc_total(hand=game['you']['hand']) < 16:
+    if hit_or_stand(total=calc_total(hand=game['you']['hand'])) and game['you']['stand'] is False:
         your_card = game['card'].pop()
         game['you']['hand'].append(your_card)
 
         you_hit = True
         del your_card
+    else:
+        game['you']['stand'] = True
 
     my_card = game['card'].pop()
     game['me']['hand'].append(my_card)
@@ -67,7 +85,7 @@ def stand(session_id):
         return redirect(url_for("lobby.index", game="not-found"))
 
     while True:
-        if calc_total(hand=game['you']['hand']) < 16:
+        if hit_or_stand(total=calc_total(hand=game['you']['hand'])) and game['you']['stand'] is False:
             your_card = game['card'].pop()
             game['you']['hand'].append(your_card)
             del your_card

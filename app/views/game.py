@@ -38,6 +38,7 @@ def new_game():
         "you": {
             "name": get_nickname(),
             "hand": [computer],
+            "stand": False
         },
         "me": {
             "name": get_nickname(),
