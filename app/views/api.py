@@ -19,6 +19,8 @@ bp = Blueprint(
 def hit_or_stand(total: int) -> bool:
     if total <= 14:
         return True
+    elif total >= 17:
+        return False
     else:
         do_hit = [True] * 21
 
