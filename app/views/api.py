@@ -41,7 +41,7 @@ def hit(session_id):
             "game": "not found"
         })
 
-    if calc_total(hand=game['me']['hand']) > 21:
+    if calc_total(hand=game['me']['hand']) >= 21:
         return jsonify({
             "game": "bust"
         })
