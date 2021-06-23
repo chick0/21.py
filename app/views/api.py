@@ -144,8 +144,6 @@ def stand(session_id):
         False: "alert-danger"
     }.get(win, "alert-secondary")
 
-    print(game['me']['hand'])
-
     return jsonify({
         "game": "end",
         "alert": {
