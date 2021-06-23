@@ -3,8 +3,6 @@ from random import choice
 from flask import Blueprint
 from flask import session
 from flask import jsonify
-from flask import redirect
-from flask import url_for
 
 from app.card import calc_total
 from app.card import get_display_card_name
