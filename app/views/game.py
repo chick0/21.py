@@ -33,7 +33,6 @@ def new_game():
 
     session_id = str(uuid4())
     session[session_id] = {
-        "playing": True,
         "card": card,
         "you": {
             "name": get_nickname(),
@@ -54,9 +53,6 @@ def table(session_id):
     game = session.get(session_id, None)
     if game is None:
         return redirect(url_for("game.new_game"))
-
-    if game['playing'] is False:
-        return redirect(url_for("game.end", session_id=session_id))
 
     return render_template(
         "game/table.html",

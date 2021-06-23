@@ -36,7 +36,7 @@ def hit_or_stand(total: int) -> bool:
 @bp.route("/hit/<string:session_id>")
 def hit(session_id):
     game = session.get(session_id, None)
-    if game is None or game['playing'] is False:
+    if game is None:
         return jsonify({
             "game": "not found"
         })
