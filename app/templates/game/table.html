@@ -1,8 +1,9 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="container">
+        <div id="game_result"></div>
         <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
-        <p class="lead">합계: <b>{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
+        <p class="lead">합계: <b id="you_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
 
         <div id="you_hand">
             <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
@@ -36,7 +37,35 @@
         const hit = document.getElementById("hit");
         const stand = document.getElementById("stand");
 
-        hit.addEventListener("click", function(event){
+        function call_stand(){
+            axios({
+                method: "GET",
+                url: "{{ url_for('api.stand', session_id=session_id) }}"
+            }).then(function(resp){
+                if(resp.data.game == "end"){
+                    document.getElementById("you_hand").innerHTML="";
+                    resp.data.you.hand.forEach(function(card){
+                        var you = document.createElement("img");
+                        you.setAttribute("src", card.src);
+                        you.setAttribute("alt", card.alt);
+                        document.getElementById("you_hand").appendChild(document.createTextNode(" "));
+                        document.getElementById("you_hand").appendChild(you);
+                    });
+                    document.getElementById("you_total").innerText=resp.data.you.total;
+                    document.getElementById("game_result").setAttribute("class", resp.data.alert.class);
+                    document.getElementById("game_result").innerHTML+=`<h4 class="alert-heading">${resp.data.alert.head}</h4>`;
+                    document.getElementById("game_result").innerHTML+=resp.data.alert.body+"<hr>";
+                    document.getElementById("game_result").innerHTML+='<p class="mb-0"><a class="btn btn-primary" href="/game/new">새로운 게임</a></p>';
+                }
+                else if(resp.data.game == "not found"){
+                    location.replace("/game/new");
+                }
+            }).catch(function(err){
+                window.alert("오류가 발생했습니다. 버튼을 다시 눌러주십시오.");
+            });
+        }
+
+        hit.addEventListener("click", function(){
             axios({
                 method: "GET",
                 url: "{{ url_for('api.hit', session_id=session_id) }}"
@@ -46,7 +75,7 @@
                         var you = document.createElement("img");
                         you.setAttribute("src", "/static/card_img/back.png");
                         you.setAttribute("alt", "Hidden Card");
-                        document.getElementById("my_hand").appendChild(document.createTextNode(" "));
+                        document.getElementById("you_hand").appendChild(document.createTextNode(" "));
                         document.getElementById("you_hand").appendChild(you);
                     }
 
@@ -61,15 +90,21 @@
                     location.replace("/game/new");
                 }
                 else if(resp.data.game == "bust"){
-                    location.replace("{{ url_for('api.stand', session_id=session_id) }}");
+                    call_stand();
+                }
+                else if(resp.data.game == "bust with new card"){
+                    var me = document.createElement("img");
+                    me.setAttribute("src", resp.data.new_card.me.src);
+                    me.setAttribute("alt", resp.data.new_card.me.alt);
+                    document.getElementById("my_hand").appendChild(document.createTextNode(" "));
+                    document.getElementById("my_hand").appendChild(me);
+                    document.getElementById("my_total").innerText=resp.data.new_card.me.total;
+                    call_stand();
                 }
             }).catch(function(err){
                 window.alert("오류가 발생했습니다. 버튼을 다시 눌러주십시오.");
             });
         });
-
-        stand.addEventListener("click", function(event){
-            location.replace("{{ url_for('api.stand', session_id=session_id) }}");
-        });
+        stand.addEventListener("click", call_stand);
     </script>
 {% endblock %}
