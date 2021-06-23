@@ -64,7 +64,15 @@ def hit(session_id):
 
     if calc_total(hand=game['me']['hand']) > 21:
         return jsonify({
-            "game": "bust"
+            "game": "bust with new card",
+            "new_card": {
+                "you": you_hit,
+                "me": {
+                    "alt": get_display_card_name(card=my_card),
+                    "src": f"/static/card_img/{my_card}.png",
+                    "total": calc_total(game['me']['hand'])
+                }
+            }
         })
 
     return jsonify({
