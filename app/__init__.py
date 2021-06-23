@@ -17,9 +17,6 @@ def create_app():
     app.add_template_filter(template_filter.get_number, "get_number")
     app.add_template_filter(template_filter.calc_total, "calc_total")
 
-    app.add_template_filter(template_filter.get_alert_class, "get_alert_class")
-    app.add_template_filter(template_filter.get_win_string, "get_win_string")
-
     from . import views
     for view in views.__all__:
         app.register_blueprint(getattr(views, view).__getattribute__("bp"))
