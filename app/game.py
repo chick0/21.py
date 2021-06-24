@@ -20,6 +20,8 @@ def get_dummy_session(your_name: str = get_nickname(), my_name: str = get_nickna
 
     you.append(card.pop())
     me.append(card.pop())
+    you.append(card.pop())
+    me.append(card.pop())
 
     return {
         "card": card,
