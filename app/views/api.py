@@ -47,7 +47,12 @@ def status(session_id: str):
                 {
                     "alt": get_display_card_name(card=game['you']['hand'][0]),
                     "src": f"/static/card_img/{game['you']['hand'][0]}.png",
-                }
+                },
+            ] + [
+                {
+                    "alt": "Hidden Card",
+                    "src": "/static/card_img/back.png",
+                } for x in range(0, len(game['you']['hand']) - 1)
             ]
         },
         "me": {
