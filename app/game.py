@@ -12,7 +12,7 @@ def get_card_deck() -> list:
     ] * 2
 
 
-def get_dummy_session() -> dict:
+def get_dummy_session(your_name: str = get_nickname(), my_name: str = get_nickname()) -> dict:
     card = get_card_deck()
     shuffle(card)
 
@@ -24,12 +24,12 @@ def get_dummy_session() -> dict:
     return {
         "card": card,
         "you": {
-            "name": get_nickname(),
+            "name": your_name,
             "hand": you,
             "stand": False
         },
         "me": {
-            "name": get_nickname(),
+            "name": my_name,
             "hand": me,
         }
     }

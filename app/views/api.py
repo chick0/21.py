@@ -123,7 +123,10 @@ def stand(session_id: str):
             break
 
     # 게임 종료! - 세션 리셋하기
-    session[session_id] = get_dummy_session()
+    session[session_id] = get_dummy_session(
+        your_name=game['you']['name'],
+        my_name=game['me']['name']
+    )
 
     # # # # # # # # # # # # # # # # # # # # # # #
 
