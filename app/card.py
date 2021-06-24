@@ -41,14 +41,19 @@ def get_number(card: str) -> int:
 def calc_total(hand: list) -> int:
     total = 0
     total_without = calc_total_without_ace(hand=hand)
+    ace_used = False
+
     for card in hand:
         if not card.endswith("A"):
             total += get_number(card)
         else:
-            if total_without <= 10:
-                total += 11
-            else:
-                total += 1
+            if not ace_used:
+                if total_without <= 10:
+                    total += 11
+                else:
+                    total += 1
+
+                ace_used = True
 
     return total
 
