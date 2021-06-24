@@ -6,6 +6,7 @@ from flask import jsonify
 
 from app.card import calc_total
 from app.card import get_display_card_name
+from app.game import get_dummy_session
 
 bp = Blueprint(
     name="api",
@@ -31,8 +32,38 @@ def hit_or_stand(total: int) -> bool:
         return choice(do_hit)
 
 
+@bp.route("/status/<string:session_id>")
+def status(session_id: str):
+    game = session.get(session_id, None)
+    if game is None:
+        return jsonify({
+            "game": "not found"
+        })
+
+    return jsonify({
+        "you": {
+            "total": calc_total(hand=[game['you']['hand'][0]]),
+            "hand": [
+                {
+                    "alt": get_display_card_name(card=game['you']['hand'][0]),
+                    "src": f"/static/card_img/{game['you']['hand'][0]}.png",
+                }
+            ]
+        },
+        "me": {
+            "total": calc_total(hand=game['me']['hand']),
+            "hand": [
+                {
+                    "alt": get_display_card_name(card=card_),
+                    "src": f"/static/card_img/{card_}.png",
+                } for card_ in game['me']['hand']
+            ]
+        }
+    })
+
+
 @bp.route("/hit/<string:session_id>")
-def hit(session_id):
+def hit(session_id: str):
     game = session.get(session_id, None)
     if game is None:
         return jsonify({
@@ -57,37 +88,26 @@ def hit(session_id):
     my_card = game['card'].pop()
     game['me']['hand'].append(my_card)
 
-    "hit!"
+    # 변동사항 게임세션에 저장
     session[session_id] = game
 
+    game_status = "ok"
     if calc_total(hand=game['me']['hand']) > 21:
-        return jsonify({
-            "game": "bust with new card",
-            "new_card": {
-                "you": you_hit,
-                "me": {
-                    "alt": get_display_card_name(card=my_card),
-                    "src": f"/static/card_img/{my_card}.png",
-                    "total": calc_total(game['me']['hand'])
-                }
-            }
-        })
+        game_status = "bust with new card"
 
     return jsonify({
-        "game": "ok",
-        "new_card": {
-            "you": you_hit,
-            "me": {
-                "alt": get_display_card_name(card=my_card),
-                "src": f"/static/card_img/{my_card}.png",
-                "total": calc_total(game['me']['hand'])
-            }
+        "game": game_status,
+        "you": you_hit,
+        "me": {
+            "alt": get_display_card_name(card=my_card),
+            "src": f"/static/card_img/{my_card}.png",
+            "total": calc_total(game['me']['hand'])
         }
     })
 
 
 @bp.route("/stand/<string:session_id>")
-def stand(session_id):
+def stand(session_id: str):
     game = session.get(session_id, None)
     if game is None:
         return jsonify({
@@ -102,10 +122,8 @@ def stand(session_id):
         else:
             break
 
-    "stand!"
-
-    # game is end!
-    del session[session_id]
+    # 게임 종료! - 세션 리셋하기
+    session[session_id] = get_dummy_session()
 
     # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -139,17 +157,17 @@ def stand(session_id):
         False: "패배..."
     }.get(win, "무승부")
 
-    alert_class = {
-        True: "alert-success",
-        False: "alert-danger"
-    }.get(win, "alert-secondary")
+    bootstrap_color = {
+        True: "success",
+        False: "danger"
+    }.get(win, "secondary")
 
     return jsonify({
         "game": "end",
         "alert": {
             "head": head,
             "body": reason,
-            "class": f"alert {alert_class}"
+            "color": bootstrap_color
         },
         "you": {
             "total": you,

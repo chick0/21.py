@@ -1,11 +1,17 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="container">
-        <div id="game_result"></div>
-        <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
-        <p class="lead">합계: <b id="you_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
+        <div id="game_result" style="display:none;">
+            <h4 class="alert-heading" id="game_result_head"></h4>
+            <span id="game_result_body"></span>
+            <hr>
+            <p class="mb-0"><button id="reset">다시하기</button></p>
+        </div>
 
-        <div id="you_hand">
+        <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
+        <p class="lead">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
+
+        <div id="your_hand">
             <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
         {% for i in range(0, game['you']['hand']|length -1) %}
             <img src="/static/card_img/back.png" alt="Hidden Card">
@@ -23,9 +29,8 @@
         {% endfor %}
         </div>
 
-        <br>
-        <div class="d-grid gap-2">
-            <div class="btn-group">
+        <div class="d-grid gap-2 py-3">
+            <div class="btn-group" id="gm_btn_div_box" style="display:inline-flex;">
                 <button class="btn btn-primary" id="hit">Hit</button>
                 <button class="btn btn-danger" id="stand">Stand</button>
             </div>
@@ -36,6 +41,7 @@
     <script>
         const hit = document.getElementById("hit");
         const stand = document.getElementById("stand");
+        const reset = document.getElementById("reset");
 
         function call_stand(){
             axios({
@@ -43,19 +49,22 @@
                 url: "{{ url_for('api.stand', session_id=session_id) }}"
             }).then(function(resp){
                 if(resp.data.game == "end"){
-                    document.getElementById("you_hand").innerHTML="";
+                    document.getElementById("your_hand").innerHTML="";
                     resp.data.you.hand.forEach(function(card){
                         var you = document.createElement("img");
                         you.setAttribute("src", card.src);
                         you.setAttribute("alt", card.alt);
-                        document.getElementById("you_hand").appendChild(document.createTextNode(" "));
-                        document.getElementById("you_hand").appendChild(you);
+                        document.getElementById("your_hand").appendChild(document.createTextNode(" "));
+                        document.getElementById("your_hand").appendChild(you);
                     });
-                    document.getElementById("you_total").innerText=resp.data.you.total;
-                    document.getElementById("game_result").setAttribute("class", resp.data.alert.class);
-                    document.getElementById("game_result").innerHTML+=`<h4 class="alert-heading">${resp.data.alert.head}</h4>`;
-                    document.getElementById("game_result").innerHTML+=resp.data.alert.body+"<hr>";
-                    document.getElementById("game_result").innerHTML+='<p class="mb-0"><a class="btn btn-primary" href="/game/new">새로운 게임</a></p>';
+                    document.getElementById("your_total").innerText=resp.data.you.total;
+                    document.getElementById("reset").setAttribute("class", `btn btn-${resp.data.alert.color}`);
+                    document.getElementById("game_result").setAttribute("class", `alert alert-${resp.data.alert.color}`);
+                    document.getElementById("game_result_head").innerText=resp.data.alert.head;
+                    document.getElementById("game_result_body").innerHTML=resp.data.alert.body;
+                    document.getElementById("gm_btn_div_box").setAttribute("style", "display:none");
+                    document.getElementById("game_result").setAttribute("style", "display:block;");
+                    document.getElementById("reset").focus();
                 }
                 else if(resp.data.game == "not found"){
                     location.replace("/game/new");
@@ -71,20 +80,20 @@
                 url: "{{ url_for('api.hit', session_id=session_id) }}"
             }).then(function(resp){
                 if(resp.data.game == "ok"){
-                    if(resp.data.new_card.you){
+                    if(resp.data.you){
                         var you = document.createElement("img");
                         you.setAttribute("src", "/static/card_img/back.png");
                         you.setAttribute("alt", "Hidden Card");
-                        document.getElementById("you_hand").appendChild(document.createTextNode(" "));
-                        document.getElementById("you_hand").appendChild(you);
+                        document.getElementById("your_hand").appendChild(document.createTextNode(" "));
+                        document.getElementById("your_hand").appendChild(you);
                     }
 
                     var me = document.createElement("img");
-                    me.setAttribute("src", resp.data.new_card.me.src);
-                    me.setAttribute("alt", resp.data.new_card.me.alt);
+                    me.setAttribute("src", resp.data.me.src);
+                    me.setAttribute("alt", resp.data.me.alt);
                     document.getElementById("my_hand").appendChild(document.createTextNode(" "));
                     document.getElementById("my_hand").appendChild(me);
-                    document.getElementById("my_total").innerText=resp.data.new_card.me.total;
+                    document.getElementById("my_total").innerText=resp.data.me.total;
                 }
                 else if(resp.data.game == "not found"){
                     location.replace("/game/new");
@@ -94,11 +103,11 @@
                 }
                 else if(resp.data.game == "bust with new card"){
                     var me = document.createElement("img");
-                    me.setAttribute("src", resp.data.new_card.me.src);
-                    me.setAttribute("alt", resp.data.new_card.me.alt);
+                    me.setAttribute("src", resp.data.me.src);
+                    me.setAttribute("alt", resp.data.me.alt);
                     document.getElementById("my_hand").appendChild(document.createTextNode(" "));
                     document.getElementById("my_hand").appendChild(me);
-                    document.getElementById("my_total").innerText=resp.data.new_card.me.total;
+                    document.getElementById("my_total").innerText=resp.data.me.total;
                     call_stand();
                 }
             }).catch(function(err){
@@ -106,5 +115,34 @@
             });
         });
         stand.addEventListener("click", call_stand);
+        reset.addEventListener("click", function(){
+            axios({
+                method: "GET",
+                url: "{{ url_for('api.status', session_id=session_id) }}"
+            }).then(function(resp){
+                document.getElementById("your_total").innerText=resp.data.you.total;
+                document.getElementById("my_total").innerText=resp.data.me.total;
+                document.getElementById("your_hand").innerHTML="";
+                document.getElementById("my_hand").innerHTML="";
+                resp.data.you.hand.forEach(function(card){
+                    var you = document.createElement("img");
+                    you.setAttribute("src", card.src);
+                    you.setAttribute("alt", card.alt);
+                    document.getElementById("your_hand").appendChild(document.createTextNode(" "));
+                    document.getElementById("your_hand").appendChild(you);
+                });
+                resp.data.me.hand.forEach(function(card){
+                    var me = document.createElement("img");
+                    me.setAttribute("src", card.src);
+                    me.setAttribute("alt", card.alt);
+                    document.getElementById("my_hand").appendChild(document.createTextNode(" "));
+                    document.getElementById("my_hand").appendChild(me);
+                });
+                document.getElementById("gm_btn_div_box").setAttribute("style", "display:inline-flex");
+                document.getElementById("game_result").setAttribute("style", "display:none;");
+            }).catch(function(err){
+                location.replace("/game/new");
+            });
+        });
     </script>
 {% endblock %}
