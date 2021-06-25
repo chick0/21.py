@@ -34,7 +34,7 @@ def get_number(card: str) -> int:
         "X": 10,
         "J": 10,
         "Q": 10,
-        "K": 11,
+        "K": 10,
     }.get(n)
 
 
