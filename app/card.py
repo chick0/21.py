@@ -22,7 +22,6 @@ def get_display_card_name(card: str) -> str:
 def get_number(card: str) -> int:
     s, n = card
     return {
-        "A": 1,
         "2": 2,
         "3": 3,
         "4": 4,
@@ -39,29 +38,25 @@ def get_number(card: str) -> int:
 
 
 def calc_total(hand: list) -> int:
-    total = 0
-    total_without = calc_total_without_ace(hand=hand)
-    ace_used = False
+    total, ace_count = calc_total_without_ace(hand=hand)
+    ace_total = 0
 
+    for i in range(0, ace_count):
+        if ((21 - total - ace_total) - 11) >= 0:
+            ace_total += 11
+        else:
+            ace_total += 1
+
+    return total + ace_total
+
+
+def calc_total_without_ace(hand: list) -> (int, int):
+    total = 0
+    ace_count = 0
     for card in hand:
         if not card.endswith("A"):
             total += get_number(card)
         else:
-            if not ace_used:
-                if total_without <= 10:
-                    total += 11
-                else:
-                    total += 1
+            ace_count += 1
 
-                ace_used = True
-
-    return total
-
-
-def calc_total_without_ace(hand: list) -> int:
-    total = 0
-    for card in hand:
-        if not card.endswith("A"):
-            total += get_number(card)
-
-    return total
+    return total, ace_count
