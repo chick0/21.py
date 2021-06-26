@@ -7,6 +7,7 @@ from flask import jsonify
 from app.card import calc_total
 from app.card import get_display_card_name
 from app.game import get_dummy_session
+from app.winner import get_winner
 
 bp = Blueprint(
     name="api",
@@ -135,50 +136,30 @@ def stand(session_id: str):
 
     # # # # # # # # # # # # # # # # # # # # # # #
 
-    you = calc_total(hand=game['you']['hand'])
-    me = calc_total(hand=game['me']['hand'])
-
-    if me == 21:
-        win = True
-        reason = "축하드립니다! 21을 만들었습니다!"
-    elif you == 21:
-        win = False
-        reason = f"이런! <b>{game['you']['name']}</b>(이)가 21을 만들었습니다!"
-    elif me > 21:
-        win = False
-        reason = "이런! 당신의 숫자 합이 21보다 크네요..."
-    elif you > 21:
-        win = True
-        reason = f"우와! <b>{game['you']['name']}</b>(이)의 숫자 합이 21보다 크네요"
-    elif me < you:
-        win = False
-        reason = f"이런! 당신의 숫자합이 <b>{game['you']['name']}</b>(이)의 숫자 합 보다 작네요..."
-    elif me > you:
-        win = True
-        reason = f"축하드립니다! <b>{game['you']['name']}</b>(이) 보다 큰 숫자를 만들었습니다!"
-    else:
-        win = None
-        reason = ""
-
-    head = {
-        True: "승리!",
-        False: "패배..."
-    }.get(win, "무승부")
-
-    bootstrap_color = {
-        True: "success",
-        False: "danger"
-    }.get(win, "secondary")
+    win, reason = get_winner(
+        you=calc_total(hand=game['you']['hand']),
+        me=calc_total(hand=game['me']['hand']),
+        name={
+            "you": game['you']['name'],
+            "me": game['me']['name']
+        }
+    )
 
     return jsonify({
         "game": "end",
         "alert": {
-            "head": head,
+            "head": {
+                True: "승리!",
+                False: "패배..."
+            }.get(win, "무승부"),
             "body": reason,
-            "color": bootstrap_color
+            "color": {
+                True: "success",
+                False: "danger"
+            }.get(win, "secondary")
         },
         "you": {
-            "total": you,
+            "total": calc_total(hand=game['you']['hand']),
             "hand": [
                 {
                     "alt": get_display_card_name(card=card_),
