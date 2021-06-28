@@ -1,11 +1,9 @@
-from uuid import uuid4
 
 from flask import Blueprint
 from flask import session
-from flask import url_for
-from flask import redirect
 from flask import render_template
 
+from app import GAME_SESSION_ID
 from app.game import get_dummy_session
 
 bp = Blueprint(
@@ -15,22 +13,14 @@ bp = Blueprint(
 )
 
 
-@bp.route("/new")
-def new_game():
-    session_id = str(uuid4())
-    session[session_id] = get_dummy_session()
-
-    return redirect(url_for("game.table", session_id=session_id))
-
-
-@bp.route("/<string:session_id>")
-def table(session_id):
-    game = session.get(session_id, None)
+@bp.route("/table")
+def table():
+    game = session.get(GAME_SESSION_ID, None)
     if game is None:
-        return redirect(url_for("game.new_game"))
+        session[GAME_SESSION_ID] = get_dummy_session()
+        game = session[GAME_SESSION_ID]
 
     return render_template(
         "game/table.html",
-        game=game,
-        session_id=session_id
+        game=game
     )
