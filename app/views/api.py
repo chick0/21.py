@@ -4,6 +4,7 @@ from flask import Blueprint
 from flask import session
 from flask import jsonify
 
+from app import GAME_SESSION_ID
 from app.card import calc_total
 from app.card import get_display_card_name
 from app.game import get_dummy_session
@@ -33,9 +34,9 @@ def hit_or_stand(total: int) -> bool:
         return choice(do_hit)
 
 
-@bp.route("/status/<string:session_id>")
-def status(session_id: str):
-    game = session.get(session_id, None)
+@bp.route("/status")
+def status():
+    game = session.get(GAME_SESSION_ID, None)
     if game is None:
         return jsonify({
             "game": "not found"
@@ -68,9 +69,9 @@ def status(session_id: str):
     })
 
 
-@bp.route("/hit/<string:session_id>")
-def hit(session_id: str):
-    game = session.get(session_id, None)
+@bp.route("/hit")
+def hit():
+    game = session.get(GAME_SESSION_ID, None)
     if game is None:
         return jsonify({
             "game": "not found"
@@ -95,7 +96,7 @@ def hit(session_id: str):
     game['me']['hand'].append(my_card)
 
     # 변동사항 게임세션에 저장
-    session[session_id] = game
+    session[GAME_SESSION_ID] = game
 
     game_status = "ok"
     if calc_total(hand=game['me']['hand']) > 21:
@@ -112,9 +113,9 @@ def hit(session_id: str):
     })
 
 
-@bp.route("/stand/<string:session_id>")
-def stand(session_id: str):
-    game = session.get(session_id, None)
+@bp.route("/stand")
+def stand():
+    game = session.get(GAME_SESSION_ID, None)
     if game is None:
         return jsonify({
             "game": "not found"
@@ -129,7 +130,7 @@ def stand(session_id: str):
             break
 
     # 게임 종료! - 세션 리셋하기
-    session[session_id] = get_dummy_session(
+    session[GAME_SESSION_ID] = get_dummy_session(
         your_name=game['you']['name'],
         my_name=game['me']['name']
     )

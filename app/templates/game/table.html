@@ -46,7 +46,7 @@
         function call_stand(){
             axios({
                 method: "GET",
-                url: "{{ url_for('api.stand', session_id=session_id) }}"
+                url: "{{ url_for('api.stand') }}"
             }).then(function(resp){
                 if(resp.data.game == "end"){
                     document.getElementById("your_hand").innerHTML="";
@@ -67,7 +67,7 @@
                     document.getElementById("reset").focus();
                 }
                 else if(resp.data.game == "not found"){
-                    location.replace("/game/new");
+                    location.replace("{{ url_for('game.table') }}");
                 }
             }).catch(function(err){
                 window.alert("오류가 발생했습니다. 버튼을 다시 눌러주십시오.");
@@ -77,7 +77,7 @@
         hit.addEventListener("click", function(){
             axios({
                 method: "GET",
-                url: "{{ url_for('api.hit', session_id=session_id) }}"
+                url: "{{ url_for('api.hit') }}"
             }).then(function(resp){
                 if(resp.data.game == "ok"){
                     if(resp.data.you){
@@ -96,7 +96,7 @@
                     document.getElementById("my_total").innerText=resp.data.me.total;
                 }
                 else if(resp.data.game == "not found"){
-                    location.replace("/game/new");
+                    location.replace("{{ url_for('game.table') }}");
                 }
                 else if(resp.data.game == "bust"){
                     call_stand();
@@ -118,7 +118,7 @@
         reset.addEventListener("click", function(){
             axios({
                 method: "GET",
-                url: "{{ url_for('api.status', session_id=session_id) }}"
+                url: "{{ url_for('api.status') }}"
             }).then(function(resp){
                 document.getElementById("your_total").innerText=resp.data.you.total;
                 document.getElementById("my_total").innerText=resp.data.me.total;
@@ -141,7 +141,7 @@
                 document.getElementById("gm_btn_div_box").setAttribute("style", "display:inline-flex");
                 document.getElementById("game_result").setAttribute("style", "display:none;");
             }).catch(function(err){
-                location.replace("/game/new");
+                location.replace("{{ url_for('game.table') }}");
             });
         });
     </script>
