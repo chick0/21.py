@@ -51,7 +51,8 @@
             </div>
         </div>
     </div>
-
+{% endblock %}
+{% block script %}
     <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
     <script>
         const hit = document.getElementById("hit");
