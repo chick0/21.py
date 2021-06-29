@@ -35,6 +35,13 @@
                 <button class="btn btn-danger" id="stand">Stand</button>
             </div>
         </div>
+
+        <div class="py-5">
+            <p class="lead mb-0">승률 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b></p>
+            <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" id="winning_rate" style="width:{{game['count']['winning_rate']}}%"></div>
+            </div>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
