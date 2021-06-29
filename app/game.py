@@ -12,7 +12,13 @@ def get_card_deck() -> list:
     ] * 2
 
 
-def get_dummy_session(your_name: str = get_nickname(), my_name: str = get_nickname()) -> dict:
+def get_dummy_session(your_name: str = None, my_name: str = None, total: int = 0, win: int = 0) -> dict:
+    if your_name is None:
+        your_name = get_nickname()
+
+    if my_name is None:
+        my_name = get_nickname()
+
     card = get_card_deck()
     shuffle(card)
 
@@ -33,5 +39,11 @@ def get_dummy_session(your_name: str = get_nickname(), my_name: str = get_nickna
         "me": {
             "name": my_name,
             "hand": me,
+        },
+        "count": {
+            "total": total,
+            "win": win,
+            "lose_or_draw": total - win,
+            "winning_rate": round((win / total) * 100) if total != 0 else 0,
         }
     }
