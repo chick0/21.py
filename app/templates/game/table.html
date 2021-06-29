@@ -1,13 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="container">
-        <div id="game_result" style="display:none;">
-            <h4 class="alert-heading" id="game_result_head"></h4>
-            <span id="game_result_body"></span>
-            <hr>
-            <p class="mb-0"><button id="reset">다시하기</button></p>
-        </div>
-
         <h4><span class="badge bg-secondary">컴퓨터</span> {{ game['you']['name'] }}</h4>
         <p class="lead">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</p>
 
@@ -30,7 +23,7 @@
         </div>
 
         <div class="d-grid gap-2 py-3">
-            <div class="btn-group" id="gm_btn_div_box" style="display:inline-flex;">
+            <div class="btn-group">
                 <button class="btn btn-primary" id="hit">Hit</button>
                 <button class="btn btn-danger" id="stand">Stand</button>
             </div>
@@ -44,7 +37,23 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="showWinStatus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" id="statusBg">
+                    <h5 class="modal-title" id="statusHead"></h5>
+                </div>
+                <div class="modal-body" id="statusBody"></div>
+                <div class="modal-footer">
+                    <button type="button" id="reset" data-bs-dismiss="modal">다시하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
     <script>
         const hit = document.getElementById("hit");
         const stand = document.getElementById("stand");
@@ -57,6 +66,8 @@
             }).then(function(resp){
                 if(resp.data.game == "end"){
                     document.getElementById("your_hand").innerHTML="";
+                    document.getElementById("winning_rate").setAttribute("style",`width:${resp.data.count.winning_rate}%;`);
+                    document.getElementById("winning_rate_text").innerText=resp.data.count.winning_rate+"%";
                     resp.data.you.hand.forEach(function(card){
                         var you = document.createElement("img");
                         you.setAttribute("src", card.src);
@@ -66,12 +77,10 @@
                     });
                     document.getElementById("your_total").innerText=resp.data.you.total;
                     document.getElementById("reset").setAttribute("class", `btn btn-${resp.data.alert.color}`);
-                    document.getElementById("game_result").setAttribute("class", `alert alert-${resp.data.alert.color}`);
-                    document.getElementById("game_result_head").innerText=resp.data.alert.head;
-                    document.getElementById("game_result_body").innerHTML=resp.data.alert.body;
-                    document.getElementById("gm_btn_div_box").setAttribute("style", "display:none");
-                    document.getElementById("game_result").setAttribute("style", "display:block;");
-                    document.getElementById("reset").focus();
+                    document.getElementById("statusBg").setAttribute("class", `modal-header text-${resp.data.alert.color}`);
+                    document.getElementById("statusHead").innerText=resp.data.alert.head;
+                    document.getElementById("statusBody").innerHTML=resp.data.alert.body;
+                    new bootstrap.Modal(document.getElementById("showWinStatus")).show();
                 }
                 else if(resp.data.game == "not found"){
                     location.replace("{{ url_for('game.table') }}");
@@ -145,8 +154,6 @@
                     document.getElementById("my_hand").appendChild(document.createTextNode(" "));
                     document.getElementById("my_hand").appendChild(me);
                 });
-                document.getElementById("gm_btn_div_box").setAttribute("style", "display:inline-flex");
-                document.getElementById("game_result").setAttribute("style", "display:none;");
             }).catch(function(err){
                 location.replace("{{ url_for('game.table') }}");
             });
