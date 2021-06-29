@@ -45,6 +45,8 @@
         <div class="py-2"></div>
 
         {% block content %}{% endblock %}
+
+        <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
         {% block script %}{% endblock %}
     </body>
 </html>
