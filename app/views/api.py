@@ -129,14 +129,6 @@ def stand():
         else:
             break
 
-    # 게임 종료! - 세션 리셋하기
-    session[GAME_SESSION_ID] = get_dummy_session(
-        your_name=game['you']['name'],
-        my_name=game['me']['name']
-    )
-
-    # # # # # # # # # # # # # # # # # # # # # # #
-
     win, reason = get_winner(
         you=calc_total(hand=game['you']['hand']),
         me=calc_total(hand=game['me']['hand']),
@@ -146,12 +138,20 @@ def stand():
         }
     )
 
+    # 게임 종료! - 세션 리셋하기
+    session[GAME_SESSION_ID] = get_dummy_session(
+        your_name=game['you']['name'],
+        my_name=game['me']['name'],
+        total=game['count']['total'] + 1,
+        win=game['count']['win'] + 1 if win is True else game['count']['win']
+    )
+
     return jsonify({
         "game": "end",
         "alert": {
             "head": {
                 True: "승리!",
-                False: "패배..."
+                False: "패배"
             }.get(win, "무승부"),
             "body": reason,
             "color": {
@@ -167,5 +167,6 @@ def stand():
                     "src": f"/static/card_img/{card_}.png",
                 } for card_ in game['you']['hand']
             ]
-        }
+        },
+        "count": session[GAME_SESSION_ID]['count']
     })
