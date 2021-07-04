@@ -3,6 +3,7 @@ from secrets import token_bytes
 from flask import Flask
 from flask import g
 from flask import request
+from flask import redirect
 from flask import Response
 
 from . import template_filter
@@ -52,5 +53,10 @@ def create_app():
             ]),
             mimetype="text/plain"
         )
+
+    def goto_lobby(e):
+        return redirect("/")
+
+    app.register_error_handler(404, goto_lobby)
 
     return app
