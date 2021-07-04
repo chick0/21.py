@@ -1,0 +1,18 @@
+{
+    "name": "21!",
+    "short_name": "21!",
+    "description": "심플한 카드 게임",
+    "icons": [
+        {
+            "src": "/static/21.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/game/table",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#212529"
+}

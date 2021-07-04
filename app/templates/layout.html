@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>21!</title>
 
+        <meta name="theme-color" content="#212529">
         <meta name="author" content="chick_0">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
         <meta name="keywords" content="21, 카드 게임, 카드게임, 웹 카드게임, 웹 사이트">
@@ -14,7 +15,26 @@
         <meta property="og:title" content="21!">
         <meta property="og:description" content="21은 심플한 카드 게임 입니다.">
 
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="21!">
+
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+        <link rel="shortcut icon" href="/static/21.ico">
+        <link rel="icon" type="image/png" href="/static/21.png" sizes="512x512">
+        <link rel="manifest" href="/manifest.json">
+
+        <link rel="apple-touch-icon" sizes="512x512" href="/static/21.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/iphone5_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/iphone6_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" href="/static/splash/iphoneplus_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="/static/splash/iphonex_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/iphonexr_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" href="/static/splash/iphonexsmax_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipad_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipadpro1_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipadpro3_splash.png">
+        <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipadpro2_splash.png">
     {% if game is not none %}
         <style>
             img{ width:130px; {% if g.dark %} mix-blend-mode: luminosity; {% endif %} }
@@ -56,6 +76,11 @@
             </div>
         </footer>
 
+        <script>
+            if("serviceWorker" in navigator){
+                window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js");});
+            }
+        </script>
         <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
         {% block script %}{% endblock %}
     </body>
