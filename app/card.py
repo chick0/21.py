@@ -1,5 +1,10 @@
 def get_display_card_name(card: str) -> str:
-    s, n = card
+    try:
+        s, n = card
+    except ValueError:
+        # too many values to unpack
+        return "Joker"
+
     s = {
         "C": "Clubs",
         "D": "Diamonds",
@@ -34,11 +39,11 @@ def get_number(card: str) -> int:
         "J": 10,
         "Q": 10,
         "K": 10,
-    }.get(n)
+    }.get(n, 0)
 
 
 def calc_total(hand: list) -> int:
-    total, ace_count = calc_total_without_ace(hand=hand)
+    total, ace_count, joker = calc_total_without_ace(hand=hand)
     ace_total = 0
 
     for i in range(0, ace_count):
@@ -47,16 +52,20 @@ def calc_total(hand: list) -> int:
         else:
             ace_total += 1
 
-    return total + ace_total
+    return total + ace_total if joker is False else int((total + ace_total) / 2)
 
 
 def calc_total_without_ace(hand: list) -> (int, int):
     total = 0
     ace_count = 0
+    joker = False
+
     for card in hand:
-        if not card.endswith("A"):
+        if card == "joker":
+            joker = True
+        elif not card.endswith("A"):
             total += get_number(card)
         else:
             ace_count += 1
 
-    return total, ace_count
+    return total, ace_count, joker
