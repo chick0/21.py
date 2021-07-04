@@ -46,10 +46,11 @@
 
         {% block content %}{% endblock %}
 
-        <footer class="bd-footer py-5 bg-dark text-muted">
+        <footer class="bd-footer mt-5 py-5 bg-dark text-muted">
             <div class="container">
                 <ul class="bd-footer-links ps-0 mb-3">
-                    <li class="d-inline-block"><a href="{{ url_for('lobby.rule') }}">게임 규칙</a></li>
+                    <li class="d-inline-block"><a href="{{ url_for('game.table') }}">게임 시작</a></li>
+                    <li class="d-inline-block ms-3"><a href="{{ url_for('lobby.rule') }}">게임 규칙</a></li>
                     <li class="d-inline-block ms-3"><a href="{{ url_for('dark.toggle') }}">다크 모드</a></li>
                 </ul>
             </div>
