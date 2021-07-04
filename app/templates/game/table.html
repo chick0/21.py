@@ -13,7 +13,7 @@
 
         <hr>
 
-        <h4><span class="badge bg-info">나</span> {{ game['me']['name'] }}</h4>
+        <h4><span class="badge bg-primary">나</span> {{ game['me']['name'] }}</h4>
         <p class="lead">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</p>
 
         <div id="my_hand">
@@ -32,20 +32,20 @@
         <div class="py-5">
             <p class="lead mb-0">승률 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b></p>
             <div class="progress">
-                <div class="progress-bar bg-info" role="progressbar" id="winning_rate" style="width:{{game['count']['winning_rate']}}%"></div>
+                <div class="{{ g.dark | dk_progress }}" role="progressbar" id="winning_rate" style="width:{{game['count']['winning_rate']}}%"></div>
             </div>
         </div>
     </div>
 
     <!-- Modal -->
     <div class="modal fade" id="showWinStatus" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" id="statusBg">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content {{ g.dark | dk_body }}">
+                <div class="modal-header" style="border:0;">
                     <h5 class="modal-title" id="statusHead"></h5>
                 </div>
                 <div class="modal-body" id="statusBody"></div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="border:0;">
                     <button type="button" id="reset" data-bs-dismiss="modal">다시하기</button>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     });
                     document.getElementById("your_total").innerText=resp.data.you.total;
                     document.getElementById("reset").setAttribute("class", `btn btn-${resp.data.alert.color}`);
-                    document.getElementById("statusBg").setAttribute("class", `modal-header text-${resp.data.alert.color}`);
+                    document.getElementById("statusHead").setAttribute("class", `modal-title text-${resp.data.alert.color}`);
                     document.getElementById("statusHead").innerText=resp.data.alert.head;
                     document.getElementById("statusBody").innerHTML=resp.data.alert.body;
                     new bootstrap.Modal(document.getElementById("showWinStatus")).show();

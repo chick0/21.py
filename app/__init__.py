@@ -1,12 +1,15 @@
 from secrets import token_bytes
 
 from flask import Flask
+from flask import g
+from flask import request
 from flask import Response
 
 from . import template_filter
 
 
 GAME_SESSION_ID = "21"
+DARK_MODE_COOKIE = "dk"
 
 
 def create_app():
@@ -19,10 +22,19 @@ def create_app():
     app.add_template_filter(template_filter.get_display_card_name, "get_display_card_name")
     app.add_template_filter(template_filter.get_number, "get_number")
     app.add_template_filter(template_filter.calc_total, "calc_total")
+    app.add_template_filter(template_filter.dk_body, "dk_body")
+    app.add_template_filter(template_filter.dk_progress, "dk_progress")
 
     from . import views
     for view in views.__all__:
         app.register_blueprint(getattr(views, view).__getattribute__("bp"))
+
+    @app.before_request
+    def set_dark_mode():
+        if request.cookies.get(DARK_MODE_COOKIE, "undefined") == "on":
+            g.dark = True
+        else:
+            g.dark = False
 
     @app.after_request
     def set_header(response):
