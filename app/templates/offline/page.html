@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
         <link rel="shortcut icon" href="/static/21.ico">
         <link rel="icon" type="image/png" href="/static/21.png" sizes="512x512">
-        <link rel="manifest" href="/static/manifest.json">
+        <link rel="manifest" href="/manifest.json">
     </head>
     <body>
         <div class="container">
@@ -29,7 +29,7 @@
 
         <script>
             if("serviceWorker" in navigator){
-                window.addEventListener("load",function(){navigator.serviceWorker.register("/static/sw.js");});
+                window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js");});
             }
         </script>
     </body>

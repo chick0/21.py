@@ -22,7 +22,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
         <link rel="shortcut icon" href="/static/21.ico">
         <link rel="icon" type="image/png" href="/static/21.png" sizes="512x512">
-        <link rel="manifest" href="/static/manifest.json">
+        <link rel="manifest" href="/manifest.json">
 
         <link rel="apple-touch-icon" sizes="512x512" href="/static/21.png">
         <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/iphone5_splash.png">
@@ -78,7 +78,7 @@
 
         <script>
             if("serviceWorker" in navigator){
-                window.addEventListener("load",function(){navigator.serviceWorker.register("/static/sw.js");});
+                window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js");});
             }
         </script>
         <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
