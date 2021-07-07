@@ -1,3 +1,8 @@
+
+from .config import Card
+from .config import Joker
+
+
 def get_display_card_name(card: str) -> str:
     try:
         s, n = card
@@ -36,9 +41,9 @@ def get_number(card: str) -> int:
         "8": 8,
         "9": 9,
         "X": 10,
-        "J": 10,
-        "Q": 10,
-        "K": 10,
+        "J": Card.jack,
+        "Q": Card.queen,
+        "K": Card.king,
     }.get(n, 0)
 
 
@@ -52,7 +57,7 @@ def calc_total(hand: list) -> int:
         else:
             ace_total += 1
 
-    return total + ace_total if joker is False else int((total + ace_total) / 2)
+    return total + ace_total if joker is False else int((total + ace_total) * Joker.effect)
 
 
 def calc_total_without_ace(hand: list) -> (int, int):

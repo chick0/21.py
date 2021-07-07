@@ -5,9 +5,9 @@
         <ol>
             <li class="mb-4">
                 <ul style="list-style:square">
-                    <li>게임에서는 총 <b>2개의 덱</b>을 사용합니다. (총 104장/조커 1장)</li>
+                    <li>게임에서는 총 <b>{{ use_deck }}개의 덱</b>을 사용합니다. (총 {{52*use_deck}}장/조커 {{cards}}장)</li>
                     <li>카드는 게임이 시작되기 전에 <b>1번</b> 셔플 됩니다.</li>
-                    <li>모든 플레이어는 총 <b>2장의 카드</b>를 받고 시작합니다.</li>
+                    <li>모든 플레이어는 총 <b>{{start_cards}}장의 카드</b>를 받고 시작합니다.</li>
                 </ul>
             </li>
 
@@ -35,10 +35,10 @@
             <li class="mb-4">
                 <ul style="list-style:square">
                     <li><b class="badge bg-danger">Ace</b> 카드는 <b>1</b> 또는 <b>11</b>로 계산합니다.</li>
-                    <li><b class="badge bg-success">Jack</b> 카드는 <b>10</b>으로 계산합니다.</li>
-                    <li><b class="badge bg-success">Queen</b> 카드는 <b>10</b>으로 계산합니다.</li>
-                    <li><b class="badge bg-success">King</b> 카드는 <b>10</b>으로 계산합니다.</li>
-                    <li><b class="badge bg-danger">Joker</b> 카드를 소지할 경우 카드의 숫자 합을 <b>1/2</b>배로 계산합니다. (버림으로 계산, 반올림이 아님)</li>
+                    <li><b class="badge bg-success">Jack</b> 카드는 <b>{{jack}}</b>으로 계산합니다.</li>
+                    <li><b class="badge bg-success">Queen</b> 카드는 <b>{{queen}}</b>으로 계산합니다.</li>
+                    <li><b class="badge bg-success">King</b> 카드는 <b>{{king}}</b>으로 계산합니다.</li>
+                    <li><b class="badge bg-danger">Joker</b> 카드를 소지할 경우 카드의 숫자 합을 <b>{{effect}}</b>배로 계산합니다. (버림으로 계산, 반올림이 아님)</li>
                 </ul>
             </li>
 
