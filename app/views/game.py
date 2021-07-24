@@ -13,7 +13,7 @@ bp = Blueprint(
 )
 
 
-@bp.route("/table")
+@bp.get("/table")
 def table():
     game = session.get(GAME_SESSION_ID, None)
     if game is None:

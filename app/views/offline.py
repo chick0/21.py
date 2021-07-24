@@ -9,7 +9,7 @@ bp = Blueprint(
 )
 
 
-@bp.route("")
+@bp.get("")
 def page():
     return render_template(
         "offline/page.html"

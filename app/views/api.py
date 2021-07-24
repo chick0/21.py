@@ -34,7 +34,7 @@ def hit_or_stand(total: int) -> bool:
         return choice(do_hit)
 
 
-@bp.route("/status")
+@bp.get("/status")
 def status():
     game = session.get(GAME_SESSION_ID, None)
     if game is None:
@@ -69,7 +69,7 @@ def status():
     })
 
 
-@bp.route("/hit")
+@bp.get("/hit")
 def hit():
     game = session.get(GAME_SESSION_ID, None)
     if game is None:
@@ -113,7 +113,7 @@ def hit():
     })
 
 
-@bp.route("/stand")
+@bp.get("/stand")
 def stand():
     game = session.get(GAME_SESSION_ID, None)
     if game is None:

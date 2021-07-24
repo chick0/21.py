@@ -9,7 +9,7 @@ bp = Blueprint(
 )
 
 
-@bp.route("/sw.js")
+@bp.get("/sw.js")
 def sw():
     return send_file(
         "pwa/sw.js",
@@ -17,7 +17,7 @@ def sw():
     )
 
 
-@bp.route("/manifest.json")
+@bp.get("/manifest.json")
 def manifest():
     return send_file(
         "pwa/manifest.json",

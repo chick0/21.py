@@ -14,14 +14,14 @@ bp = Blueprint(
 )
 
 
-@bp.route("/")
+@bp.get("/")
 def index():
     return render_template(
         "lobby/index.html"
     )
 
 
-@bp.route("/rule")
+@bp.get("/rule")
 def rule():
     return render_template(
         "lobby/rule.html",

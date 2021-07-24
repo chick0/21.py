@@ -14,7 +14,7 @@ bp = Blueprint(
 )
 
 
-@bp.route("/toggle")
+@bp.get("/toggle")
 def toggle():
     target = request.referrer
     if target is None:
