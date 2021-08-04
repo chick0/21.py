@@ -24,7 +24,6 @@ def create_app():
     app.add_template_filter(template_filter.get_number, "get_number")
     app.add_template_filter(template_filter.calc_total, "calc_total")
     app.add_template_filter(template_filter.dk_body, "dk_body")
-    app.add_template_filter(template_filter.dk_progress, "dk_progress")
 
     from . import views
     for view in views.__all__:

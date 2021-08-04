@@ -18,10 +18,3 @@ def dk_body(dk: bool) -> str:
         return "bg-dark text-white-50"
     else:
         return ""
-
-
-def dk_progress(dk: bool) -> str:
-    if dk:
-        return "progress-bar bg-secondary"
-    else:
-        return "progress-bar bg-info"

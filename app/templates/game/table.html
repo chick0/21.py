@@ -28,13 +28,6 @@
                 <button class="btn btn-danger" id="stand">Stand</button>
             </div>
         </div>
-
-        <div class="py-5">
-            <p class="lead mb-0">승률 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b></p>
-            <div class="progress">
-                <div class="{{ g.dark | dk_progress }}" role="progressbar" id="winning_rate" style="width:{{game['count']['winning_rate']}}%"></div>
-            </div>
-        </div>
     </div>
 
     <!-- Modal -->
@@ -44,7 +37,10 @@
                 <div class="modal-header" style="border:0;">
                     <h5 class="modal-title" id="statusHead"></h5>
                 </div>
-                <div class="modal-body" id="statusBody"></div>
+                <div class="modal-body">
+                    <p id="statusBody"></p>
+                    <p class="mb-0 py-0">이제 당신의 승률은 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b> 입니다.</p>
+                </div>
                 <div class="modal-footer" style="border:0;">
                     <button type="button" id="reset" data-bs-dismiss="modal">다시하기</button>
                 </div>
@@ -66,7 +62,6 @@
             }).then(function(resp){
                 if(resp.data.game == "end"){
                     document.getElementById("your_hand").innerHTML="";
-                    document.getElementById("winning_rate").setAttribute("style",`width:${resp.data.count.winning_rate}%;`);
                     document.getElementById("winning_rate_text").innerText=resp.data.count.winning_rate+"%";
                     resp.data.you.hand.forEach(function(card){
                         var you = document.createElement("img");
