@@ -1,0 +1,5 @@
+flask
+waitress
+paste
+
+# pip-tools for pip-compile
