@@ -1,16 +1,11 @@
 from secrets import token_bytes
 
 from flask import Flask
-from flask import g
-from flask import request
-from flask import redirect
-from flask import Response
 
 from . import template_filter
 
 
 GAME_SESSION_ID = "21"
-DARK_MODE_COOKIE = "dk"
 
 
 def create_app():
@@ -20,42 +15,19 @@ def create_app():
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 
-    app.add_template_filter(template_filter.get_display_card_name, "get_display_card_name")
-    app.add_template_filter(template_filter.get_number, "get_number")
-    app.add_template_filter(template_filter.calc_total, "calc_total")
-    app.add_template_filter(template_filter.dk_body, "dk_body")
-
+    # blueprint init
     from . import views
     for view in views.__all__:
-        app.register_blueprint(getattr(views, view).__getattribute__("bp"))
+        app.register_blueprint(getattr(getattr(getattr(__import__(f"app.views.{view}"), "views"), view), "bp"))
 
-    @app.before_request
-    def set_dark_mode():
-        if request.cookies.get(DARK_MODE_COOKIE, "undefined") == "on":
-            g.dark = True
-        else:
-            g.dark = False
+    # template filter init
+    from . import template_filter
+    for name in template_filter.filter_list:
+        app.add_template_filter(f=getattr(template_filter, name), name=name)
 
-    @app.after_request
-    def set_header(response):
-        response.headers['X-Frame-Options'] = "deny"
-        response.headers['X-Powered-By'] = "chick_0"
-        return response
-
-    @app.route("/robots.txt")
-    def robots_txt():
-        return Response(
-            "\n".join([
-                'User-agent: *',
-                'Allow: /$',
-                'Disallow: /'
-            ]),
-            mimetype="text/plain"
-        )
-
-    def goto_lobby(e):
-        return redirect("/")
-
-    app.register_error_handler(404, goto_lobby)
+    # register error handler
+    from .error import error_map
+    for code in error_map:
+        app.register_error_handler(code, error_map[code])
 
     return app

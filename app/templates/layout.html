@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" class="bg-dark">
+<html lang="ko">
     <head>
         <meta charset="utf-8">
         <title>21!</title>
@@ -36,13 +36,10 @@
         <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipadpro3_splash.png">
         <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="/static/splash/ipadpro2_splash.png">
     {% if game is not none %}
-        <style>
-            img{ width:130px; {% if g.dark %} mix-blend-mode: luminosity; {% endif %} }
-            @media(max-width:420px){ img{ width:65px; } }
-        </style>
+        <style> img{ width:130px;} @media(max-width:420px){img{width:65px;}} </style>
     {% endif %}
     </head>
-    <body class="{{ g.dark | dk_body }}">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="{{ url_for('lobby.index') }}">21</a>
@@ -65,16 +62,6 @@
         <div class="py-2"></div>
 
         {% block content %}{% endblock %}
-
-        <footer class="bd-footer mt-5 py-5 bg-dark text-muted">
-            <div class="container">
-                <ul class="bd-footer-links ps-0 mb-3">
-                    <li class="d-inline-block"><a href="{{ url_for('game.table') }}">게임 시작</a></li>
-                    <li class="d-inline-block ms-3"><a href="{{ url_for('lobby.rule') }}">게임 규칙</a></li>
-                    <li class="d-inline-block ms-3"><a href="{{ url_for('dark.toggle') }}">다크 모드</a></li>
-                </ul>
-            </div>
-        </footer>
 
         <script>
             if("serviceWorker" in navigator){

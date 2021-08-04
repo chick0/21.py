@@ -13,8 +13,4 @@ def calc_total(hand: list) -> str:
     return str(calc_total(hand=hand))
 
 
-def dk_body(dk: bool) -> str:
-    if dk:
-        return "bg-dark text-white-50"
-    else:
-        return ""
+filter_list = [name for name in dir() if not name.startswith("_")]
