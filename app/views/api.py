@@ -155,9 +155,9 @@ def stand():
             }.get(win, "무승부"),
             "body": reason,
             "color": {
-                True: "success",
-                False: "danger"
-            }.get(win, "secondary")
+                True: "#15944A",
+                False: "#DC143C"
+            }.get(win, "#4D5459")
         },
         "you": {
             "total": calc_total(hand=game['you']['hand']),

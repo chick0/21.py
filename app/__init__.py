@@ -1,5 +1,6 @@
 from secrets import token_bytes
 
+from flask import g
 from flask import Flask
 
 from . import template_filter
@@ -29,5 +30,9 @@ def create_app():
     from .error import error_map
     for code in error_map:
         app.register_error_handler(code, error_map[code])
+
+    @app.before_request
+    def use_meta():
+        g.use_meta = True
 
     return app

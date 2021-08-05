@@ -1,5 +1,6 @@
 
 from flask import Blueprint
+from flask import g
 from flask import render_template
 
 bp = Blueprint(
@@ -11,6 +12,7 @@ bp = Blueprint(
 
 @bp.get("")
 def page():
+    g.use_meta = False
     return render_template(
         "offline/page.html"
     )

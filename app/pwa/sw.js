@@ -1,15 +1,16 @@
 "use strict";
 
-const CACHE_VER = "v2";
+const CACHE_VER = "v3";
 const FILES_TO_CACHE = [
     "/sw.js",
     "/manifest.json",
     "/static/21.ico",
     "/static/21.png",
     "/static/axios.min.js",
-    "/static/bootstrap/bootstrap.min.js",
-    "/static/bootstrap/bootstrap.min.css",
-    "/offline"
+    "/static/bulma.min.css",
+    "/static/bulma-burger.js",
+    "/rule",
+    "/offline",
 ];
 
 self.addEventListener("install", function(e) {
