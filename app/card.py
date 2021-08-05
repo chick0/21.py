@@ -60,7 +60,7 @@ def calc_total(hand: list) -> int:
     return total + ace_total if joker is False else int((total + ace_total) * Joker.effect)
 
 
-def calc_total_without_ace(hand: list) -> (int, int):
+def calc_total_without_ace(hand: list) -> (int, int, bool):
     total = 0
     ace_count = 0
     joker = False
