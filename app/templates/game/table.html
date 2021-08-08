@@ -1,32 +1,34 @@
 {% extends 'layout.html' %}
 {% block content %}
     <section class="section">
-        <h4 class="title is-4"><span class="tag is-link is-medium">컴퓨터</span> {{ game['you']['name'] }}</h4>
-        <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
+        <div class="block">
+            <h4 class="title is-4"><span class="tag is-link is-medium">컴퓨터</span> {{ game['you']['name'] }}</h4>
+            <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
 
-        <div id="your_hand">
-            <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
-        {% for i in range(0, game['you']['hand']|length -1) %}
-            <img src="/static/card_img/back.png" alt="Hidden Card">
-        {% endfor %}
+            <div id="your_hand">
+                <img src="/static/card_img/{{ game['you']['hand'][0] }}.png" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
+            {% for i in range(0, game['you']['hand']|length -1) %}
+                <img src="/static/card_img/back.png" alt="Hidden Card">
+            {% endfor %}
+            </div>
         </div>
 
-        <br>
+        <div class="block">
+            <h4 class="title is-4"><span class="tag is-info is-medium">나</span> {{ game['me']['name'] }}</h4>
+            <h5 class="subtitle">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</h5>
 
-        <h4 class="title is-4"><span class="tag is-info is-medium">나</span> {{ game['me']['name'] }}</h4>
-        <h5 class="subtitle">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</h5>
-
-        <div id="my_hand">
-        {% for card in game['me']['hand'] %}
-            <img src="/static/card_img/{{card}}.png" alt="{{ card|get_display_card_name }}">
-        {% endfor %}
+            <div id="my_hand">
+            {% for card in game['me']['hand'] %}
+                <img src="/static/card_img/{{card}}.png" alt="{{ card|get_display_card_name }}">
+            {% endfor %}
+            </div>
         </div>
 
-        <br>
-
-        <div class="buttons has-addons">
-            <button class="button is-info is-large" id="hit" style="display:flex;width:50%">Hit</button>
-            <button class="button is-danger is-large" id="stand" style="display:flex;width:50%">Stand</button>
+        <div class="block">
+            <div class="buttons has-addons">
+                <button class="button is-info is-large" id="hit" style="display:flex;width:50%">Hit</button>
+                <button class="button is-danger is-large" id="stand" style="display:flex;width:50%">Stand</button>
+            </div>
         </div>
     </section>
 
@@ -39,7 +41,7 @@
             </header>
             <section class="modal-card-body">
                 <p id="statusBody"></p>
-                <p class="">이제 당신의 승률은 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b> 입니다.</p>
+                <p>이제 당신의 승률은 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b> 입니다.</p>
             </section>
             <footer class="modal-card-foot">
                 <button class="button is-link is-medium is-fullwidth" id="reset" data-target="showGameStatus">다시하기</button>
