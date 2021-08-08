@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VER = "v3";
+const CACHE_VER = "v4";
 const FILES_TO_CACHE = [
     "/sw.js",
     "/manifest.json",
