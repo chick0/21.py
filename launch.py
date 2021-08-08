@@ -17,5 +17,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logger = getLogger("wsgi")
-    logger.addHandler(FileHandler("21.log"))
+    logger.addHandler(FileHandler("wsgi.log"))
     serve(app=TransLogger(create_app(), setup_console_handler=False), port=args.set_port, _quiet=True)
