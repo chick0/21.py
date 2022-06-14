@@ -1,10 +1,11 @@
 from secrets import token_bytes
 
-from flask import g
 from flask import Flask
+from flask import Response
+from flask import redirect
 
-from . import template_filter
-
+from card import get_cards
+from card import get_card_version
 
 GAME_SESSION_ID = "21"
 
@@ -16,23 +17,32 @@ def create_app():
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 
-    # blueprint init
+    cards = get_cards()
+    app.config['21_CARDS'] = cards
+    app.config['21_CARD_VERSION'] = get_card_version(cards=cards)
+
     from . import views
     for view in views.__all__:
-        app.register_blueprint(getattr(getattr(getattr(__import__(f"app.views.{view}"), "views"), view), "bp"))
+        app.register_blueprint(getattr(getattr(views, view), "bp"))
 
-    # template filter init
     from . import template_filter
     for name in template_filter.filter_list:
         app.add_template_filter(f=getattr(template_filter, name), name=name)
 
-    # register error handler
-    from .error import error_map
-    for code in error_map:
-        app.register_error_handler(code, error_map[code])
+    app.register_error_handler(
+        code_or_exception=404,
+        f=lambda x: redirect("/")
+    )
 
-    @app.before_request
-    def use_meta():
-        g.use_meta = True
+    @app.get("/robots.txt")
+    def txt():
+        return Response(
+            "\n".join([
+                'User-agent: *',
+                'Allow: /$',
+                'Disallow: /'
+            ]),
+            mimetype="text/plain"
+        )
 
     return app

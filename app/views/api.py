@@ -48,12 +48,12 @@ def status():
             "hand": [
                 {
                     "alt": get_display_card_name(card=game['you']['hand'][0]),
-                    "src": f"/static/card_img/{game['you']['hand'][0]}.png",
+                    "src": game['you']['hand'][0],
                 },
             ] + [
                 {
                     "alt": "Hidden Card",
-                    "src": "/static/card_img/back.png",
+                    "src": "back",
                 } for x in range(0, len(game['you']['hand']) - 1)
             ]
         },
@@ -62,7 +62,7 @@ def status():
             "hand": [
                 {
                     "alt": get_display_card_name(card=card_),
-                    "src": f"/static/card_img/{card_}.png",
+                    "src": card_,
                 } for card_ in game['me']['hand']
             ]
         }
@@ -107,7 +107,7 @@ def hit():
         "you": you_hit,
         "me": {
             "alt": get_display_card_name(card=my_card),
-            "src": f"/static/card_img/{my_card}.png",
+            "src": my_card,
             "total": calc_total(game['me']['hand'])
         }
     })
@@ -164,7 +164,7 @@ def stand():
             "hand": [
                 {
                     "alt": get_display_card_name(card=card_),
-                    "src": f"/static/card_img/{card_}.png",
+                    "src": card_,
                 } for card_ in game['you']['hand']
             ]
         },

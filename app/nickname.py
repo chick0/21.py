@@ -1,8 +1,3 @@
-# https://gist.github.com/chick0/20b4d213617b4d2512018a7c66b44cfd
-__author__ = "chick_0"
-__license__ = "MIT"
-
-
 a = [
     "걸아가는",
     "고민하는",

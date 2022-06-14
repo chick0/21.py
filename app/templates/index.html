@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>21!</title>
+
+        <meta name="theme-color" content="#ffffff">
+        <meta name="author" content="chick_0">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+        <meta name="keywords" content="21, 카드 게임, 카드게임, 웹 카드게임, 웹 사이트">
+        <meta name="description" content="21은 심플한 카드 게임 입니다.">
+
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="ko_KR">
+        <meta property="og:title" content="21!">
+        <meta property="og:description" content="21은 심플한 카드 게임 입니다.">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bulma.min.css') }}">
+        <style>img{ width:130px;} @media(max-width:420px){ img{ width:65px; } }</style>
+    </head>
+    <body>
+        <nav class="navbar container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#top">21</a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div class="navbar-menu" id="navbar">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="#game">게임</a>
+                    <a class="navbar-item" href="#rule">게임 규칙</a>
+                </div>
+            </div>
+        </nav>
+
+        <section class="section is-large">
+            <div id="top" class="container">
+                <h1 class="title">21</h1>
+                <h2 class="subtitle">21은 심플한 카드 게임 입니다.</h2>
+
+                <p><a class="button is-primary is-medium" href="#game">게임 시작</a></p>
+            </div>
+        </section>
+
+        <section class="section is-large">
+            <div id="game" class="container">
+                <div class="block">
+                    <h4 class="title is-4"><span class="tag is-danger is-medium">컴퓨터</span> {{ game['you']['name'] }}</h4>
+                    <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
+
+                    <div id="your_hand">
+                        <img src="{{ cards_obj[game['you']['hand'][0]] }}" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
+                    {% for i in range(0, game['you']['hand']|length -1) %}
+                        <img src="{{ cards_obj['back'] }}" alt="Hidden Card">
+                    {% endfor %}
+                    </div>
+                </div>
+
+                <div class="block">
+                    <h4 class="title is-4"><span class="tag is-info is-medium">나</span> {{ game['me']['name'] }}</h4>
+                    <h5 class="subtitle">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</h5>
+
+                    <div id="my_hand">
+                    {% for card in game['me']['hand'] %}
+                        <img src="{{ cards_obj[card] }}" alt="{{ card|get_display_card_name }}">
+                    {% endfor %}
+                    </div>
+                </div>
+
+                <div class="block">
+                    <div class="columns">
+                        <div class="column">
+                            <button class="button is-info is-large is-fullwidth" id="hit">Hit</button>
+                        </div>
+                        <div class="column">
+                            <button class="button is-danger is-large is-fullwidth" id="stand">Stand</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section is-medium">
+            <div id="rule" class="container">
+                <h1 class="title">게임 규칙</h1>
+                <div class="content">
+                    <ol>
+                        <li>
+                            <ul style="list-style:square">
+                                <li>게임에서는 총 <b>{{ use_deck }}개의 덱</b>을 사용합니다. (총 {{52*use_deck}}장/조커 {{joker.cards}}장)</li>
+                                <li>카드는 게임이 시작되기 전에 <b>1번</b> 셔플 됩니다.</li>
+                                <li>모든 플레이어는 총 <b>{{start_cards}}장의 카드</b>를 받고 시작합니다.</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <ul style="list-style:square">
+                                <li>플레이어의 카드의 숫자 합은 <b>21</b>이 넘으면 안 됩니다.</li>
+                                <li>상대방 보다 카드의 숫자 합이 <b>21</b>에 가까워야 합니다.</li>
+                                <li>플레이어의 숫자 합이 <b>21</b>이 넘으면 카드를 더 받을 수 없습니다.</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <ul style="list-style:square">
+                                <li><b class="tag is-info">Hit</b> 버튼을 누르면 새로운 카드를 한 장 받습니다.</li>
+                                <li><b class="tag is-danger">Stand</b> 버튼을 누르면 새로운 카드를 받지 않습니다. (카드를 더 받을 수 없는 상태)</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <ul style="list-style:square">
+                                <li>모든 플레이어가 카드를 더 받을 수 없을 때 게임이 종료됩니다.</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <ul style="list-style:square">
+                                <li><b class="has-text-danger-dark">Ace</b> 카드는 <b>1</b> 또는 <b>11</b>로 계산합니다.</li>
+                                <li><b class="has-text-link-dark">Jack</b> 카드는 <b>{{jack}}</b>으로 계산합니다.</li>
+                                <li><b class="has-text-success-dark">Queen</b> 카드는 <b>{{queen}}</b>으로 계산합니다.</li>
+                                <li><b class="has-text-warning-dark">King</b> 카드는 <b>{{king}}</b>으로 계산합니다.</li>
+                                <li><b class="has-text-danger-dark">Joker</b> 카드를 소지할 경우 카드의 숫자 합을 <b>{{joker.effect}}</b>배로 계산합니다. (버림으로 계산, 반올림이 아님)</li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <ul style="list-style:square">
+                                <li>승/패 처리는 다음과 같은 <b>순서대로</b> 진행됩니다.</li>
+                                <li style="list-style:none">
+                                    <ol>
+                                        <li>플레이어의 숫자 합이 21인지 확인</li>
+                                        <li>상대 플레이어의 숫자 합이 21인지 확인</li>
+                                        <li>모든 플레이어의 숫자 합이 동일하면 <b>무승부</b></li>
+                                        <li>플레이어 혹은 상대 플레이어의 숫자 합이 21을 넘겼는지 확인합니다.
+                                            <ul>
+                                                <li>한 명의 플레이어만 숫자 합이 21을 넘겼다면 그 플레이어가 패배합니다.</li>
+                                                <li>모든 플레이어의 숫자 합이 21을 넘긴 경우 숫자 합이 21과 가장 가까운 플레이어가 승리합니다</li>
+                                            </ul>
+                                        </li>
+                                        <li>플레이어의 숫자 합이 더 큰지 확인</li>
+                                        <li>1~6중에 포함되는 상황이 없으므로 <b>무승부</b></li>
+                                    </ol>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal" id="showGameStatus" tabindex="-1" aria-hidden="true">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title" id="statusHead"></p>
+                </header>
+                <section class="modal-card-body">
+                    <p id="statusBody"></p>
+                    <p>이제 당신의 승률은 <b id="winning_rate_text">{{ game['count']['winning_rate'] }}%</b> 입니다.</p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-link is-medium is-fullwidth" id="reset" data-target="showGameStatus">다시하기</button>
+                </footer>
+            </div>
+        </div>
+
+        <script src="{{ url_for('static', filename='burger.js') }}"></script>
+        <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='21.js') }}"></script>
+        <script>
+            const cards = {{ cards|safe }};
+            const api = {
+                hit: "{{ url_for('api.hit') }}",
+                stand: "{{ url_for('api.stand') }}",
+                status: "{{ url_for('api.status') }}",
+            };
+        </script>
+    </body>
+</html>
