@@ -20,7 +20,7 @@ function call_stand(){
                 document.getElementById("your_hand").appendChild(img);
             });
 
-            document.getElementById("winning_rate_text").innerText=resp.data.count.winning_rate+"%";
+            document.getElementById("winning_rate_text").innerText=resp.data.count.winning_rate + "%";
 
             document.getElementById("your_total").innerText = resp.data.you.total;
 
@@ -30,7 +30,7 @@ function call_stand(){
 
             document.getElementById("game-total").innerText = resp.data.count.total;
             document.getElementById("game-win").innerText = resp.data.count.win;
-            document.getElementById("game-rate").innerText = resp.data.count.winning_rate + " %";
+            document.getElementById("game-rate").innerText = resp.data.count.winning_rate + "%";
 
             next_name = resp.data.name.you;
 
