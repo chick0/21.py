@@ -22,6 +22,10 @@ function call_stand(){
             document.getElementById("statusHead").innerText=resp.data.alert.head;
             document.getElementById("statusBody").innerHTML=resp.data.alert.body;
 
+            document.getElementById("game-total").innerText = resp.data.count.total;
+            document.getElementById("game-win").innerText = resp.data.count.win;
+            document.getElementById("game-rate").innerText=resp.data.count.winning_rate + " %";
+
             document.body.classList.add("is-clipped");
             document.getElementById("showGameStatus").classList.add("is-active"); reset.focus();
         }
