@@ -138,12 +138,13 @@ reset.addEventListener("click", function(){
 
 document.addEventListener('keydown', (key) => {
     key = key.key.toLowerCase();
-
-    if(key == 'h'){
-        hit.click();
-    } else if(key == 's') {
-        stand.click();
-    } else if(key == 'r') {
+    if(document.getElementById("showGameStatus").classList.contains("is-active")){
         reset.click();
+    } else {
+        if(key == 'h'){
+            hit.click();
+        } else if(key == 's') {
+            stand.click();
+        }    
     }
 });
