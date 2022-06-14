@@ -49,7 +49,7 @@
         <section class="section is-large">
             <div id="game" class="container">
                 <div class="box">
-                    <h4 class="title is-4"><span class="tag is-danger is-medium">컴퓨터</span> {{ game['you']['name'] }}</h4>
+                    <h4 class="title is-4"><span class="tag is-danger is-medium">컴퓨터</span> <span id="you-name">{{ game['you']['name'] }}</span></h4>
                     <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
 
                     <div id="your_hand">

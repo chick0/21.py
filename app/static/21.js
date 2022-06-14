@@ -2,6 +2,8 @@ const hit = document.getElementById("hit");
 const stand = document.getElementById("stand");
 const reset = document.getElementById("reset");
 
+let next_name = "";
+
 function call_stand(){
     axios({
         method: "GET",
@@ -26,8 +28,12 @@ function call_stand(){
             document.getElementById("game-win").innerText = resp.data.count.win;
             document.getElementById("game-rate").innerText=resp.data.count.winning_rate + " %";
 
+            next_name = resp.data.name.you;
+
             document.body.classList.add("is-clipped");
-            document.getElementById("showGameStatus").classList.add("is-active"); reset.focus();
+            document.getElementById("showGameStatus").classList.add("is-active");
+
+            reset.focus();
         }
         else if(resp.data.game == "not found"){
             location.reload();
@@ -107,6 +113,8 @@ reset.addEventListener("click", function(){
 
         document.body.classList.remove("is-clipped");
         document.getElementById("showGameStatus").classList.remove("is-active");
+
+        document.getElementById("you-name").innerText = next_name;
     }).catch(function(err){
         console.log(err);
         location.reload();

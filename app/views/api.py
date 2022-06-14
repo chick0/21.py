@@ -9,6 +9,7 @@ from app.card import calc_total
 from app.card import get_display_card_name
 from app.game import get_dummy_session
 from app.winner import get_winner
+from app.nickname import get_nickname
 
 bp = Blueprint(
     name="api",
@@ -140,7 +141,7 @@ def stand():
 
     # 게임 종료! - 세션 리셋하기
     session[GAME_SESSION_ID] = get_dummy_session(
-        your_name=game['you']['name'],
+        your_name=get_nickname() if win is True else game['you']['name'],
         my_name=game['me']['name'],
         total=game['count']['total'] + 1,
         win=game['count']['win'] + 1 if win is True else game['count']['win']
@@ -168,5 +169,9 @@ def stand():
                 } for card_ in game['you']['hand']
             ]
         },
-        "count": session[GAME_SESSION_ID]['count']
+        "count": session[GAME_SESSION_ID]['count'],
+        "name": {
+            # "me": session[GAME_SESSION_ID]['me']['name'],
+            "you": session[GAME_SESSION_ID]['you']['name'],
+        }
     })
