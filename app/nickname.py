@@ -287,4 +287,4 @@ b = [
 
 def get_nickname():
     from random import choice
-    return choice(a) + choice(b)
+    return choice(a) + " " + choice(b)
