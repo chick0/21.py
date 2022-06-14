@@ -48,7 +48,7 @@
 
         <section class="section is-large">
             <div id="game" class="container">
-                <div class="block">
+                <div class="box">
                     <h4 class="title is-4"><span class="tag is-danger is-medium">컴퓨터</span> {{ game['you']['name'] }}</h4>
                     <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
 
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="block">
+                <div class="box">
                     <h4 class="title is-4"><span class="tag is-info is-medium">나</span> {{ game['me']['name'] }}</h4>
                     <h5 class="subtitle">합계: <b id="my_total">{{ game['me']['hand']|calc_total }}</b>/21</h5>
 
