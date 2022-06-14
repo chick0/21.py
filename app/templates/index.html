@@ -53,9 +53,9 @@
                     <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
 
                     <div id="your_hand">
-                        <img src="{{ cards_obj[game['you']['hand'][0]] }}" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
+                        <img data-id="{{ game['you']['hand'][0] }}" src="" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
                     {% for i in range(0, game['you']['hand']|length -1) %}
-                        <img src="{{ cards_obj['back'] }}" alt="Hidden Card">
+                        <img data-id="back" src="" alt="Hidden Card">
                     {% endfor %}
                     </div>
                 </div>
@@ -66,7 +66,7 @@
 
                     <div id="my_hand">
                     {% for card in game['me']['hand'] %}
-                        <img src="{{ cards_obj[card] }}" alt="{{ card|get_display_card_name }}">
+                        <img data-id="{{ card }}" src="" alt="{{ card|get_display_card_name }}">
                     {% endfor %}
                     </div>
                 </div>
@@ -187,6 +187,12 @@
                 hit: "{{ url_for('api.hit') }}",
                 stand: "{{ url_for('api.stand') }}",
                 status: "{{ url_for('api.status') }}",
+            };
+
+            window.onload = () => {
+                document.querySelectorAll("img").forEach((img) => {
+                    img.setAttribute("src", cards[img.dataset.id]);
+                });
             };
         </script>
     </body>
