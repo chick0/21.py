@@ -35,6 +35,27 @@ def hit_or_stand(total: int) -> bool:
         return choice(do_hit)
 
 
+@bp.get("/joker")
+def joker_pop():
+    game = session.get(GAME_SESSION_ID, None)
+    if game is None:
+        return jsonify({
+            "game": "not found"
+        })
+
+    joker = False
+    if 'joker' in game['me']['hand']:
+        del game['me']['hand'][game['me']['hand'].index('joker')]
+        session[GAME_SESSION_ID] = game
+        joker = True
+
+    return jsonify({
+        "game": "ok",
+        "joker": joker,
+        "total": calc_total(hand=game['me']['hand'])
+    })
+
+
 @bp.get("/status")
 def status():
     game = session.get(GAME_SESSION_ID, None)

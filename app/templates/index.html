@@ -53,9 +53,9 @@
                     <h5 class="subtitle">합계: <b id="your_total">{{ [ game['you']['hand'][0] ]|calc_total }}</b>/21</h5>
 
                     <div id="your_hand">
-                        <img data-id="{{ game['you']['hand'][0] }}" src="" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
+                        <img data-id="{{ game['you']['hand'][0] }}" data-owner="you" src="" alt="{{ game['you']['hand'][0]|get_display_card_name }}">
                     {% for i in range(0, game['you']['hand']|length -1) %}
-                        <img data-id="back" src="" alt="Hidden Card">
+                        <img data-id="back" data-owner="you" src="" alt="Hidden Card">
                     {% endfor %}
                     </div>
                 </div>
@@ -66,7 +66,7 @@
 
                     <div id="my_hand">
                     {% for card in game['me']['hand'] %}
-                        <img data-id="{{ card }}" src="" alt="{{ card|get_display_card_name }}">
+                        <img data-id="{{ card }}" data-owner="me" src="" alt="{{ card|get_display_card_name }}">
                     {% endfor %}
                     </div>
                 </div>
@@ -133,6 +133,7 @@
                                 <li><b class="has-text-success-dark">Queen</b> 카드는 <b>{{queen}}</b>으로 계산합니다.</li>
                                 <li><b class="has-text-warning-dark">King</b> 카드는 <b>{{king}}</b>으로 계산합니다.</li>
                                 <li><b class="has-text-danger-dark">Joker</b> 카드를 소지할 경우 카드의 숫자 합을 <b>{{joker.effect}}</b>배로 계산합니다. (버림으로 계산, 반올림이 아님)</li>
+                                <li><b class="has-text-danger-dark">Joker</b> 카드는 버릴 수 있습니다.</li>
                             </ul>
                         </li>
 
@@ -140,12 +141,12 @@
                             <ul style="list-style:square">
                                 <li>승/패 처리는 다음과 같은 <b>순서대로</b> 진행됩니다.</li>
                                 <li style="list-style:none">
-                                    <ol>
+                                    <ol style="margin-left:0">
                                         <li>플레이어의 숫자 합이 21인지 확인</li>
                                         <li>상대 플레이어의 숫자 합이 21인지 확인</li>
                                         <li>모든 플레이어의 숫자 합이 동일하면 <b>무승부</b></li>
                                         <li>플레이어 혹은 상대 플레이어의 숫자 합이 21을 넘겼는지 확인합니다.
-                                            <ul>
+                                            <ul style="list-style:lower-roman;margin-left:1em">
                                                 <li>한 명의 플레이어만 숫자 합이 21을 넘겼다면 그 플레이어가 패배합니다.</li>
                                                 <li>모든 플레이어의 숫자 합이 21을 넘긴 경우 숫자 합이 21과 가장 가까운 플레이어가 승리합니다</li>
                                             </ul>
@@ -187,11 +188,13 @@
                 hit: "{{ url_for('api.hit') }}",
                 stand: "{{ url_for('api.stand') }}",
                 status: "{{ url_for('api.status') }}",
+                joker: "{{ url_for('api.joker_pop') }}",
             };
 
             window.onload = () => {
                 document.querySelectorAll("img").forEach((img) => {
                     img.setAttribute("src", cards[img.dataset.id]);
+                    img.addEventListener('click', card_on_click);
                 });
             };
         </script>

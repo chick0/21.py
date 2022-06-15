@@ -4,6 +4,58 @@ const reset = document.getElementById("reset");
 
 let next_name = "";
 
+function get_card_img(owner, card_id, alt){
+    let img = document.createElement("img");
+    img.setAttribute("src", cards[card_id]);
+    img.setAttribute("alt", alt);
+    img.addEventListener('click', card_on_click);
+    img.setAttribute("data-id", card_id);
+    img.setAttribute("data-owner", owner);
+
+    return img;
+}
+
+function get_hand(target){
+    if(target == "me"){
+        return document.getElementById("my_hand");
+    } else if (target == "you") {
+        return document.getElementById("your_hand");
+    } else {
+        throw new Error(`target must be 'you' or 'me' not ${target}`)
+    }
+}
+
+function appendCard(owner, card){
+    let hand = get_hand(owner);
+    hand.appendChild(document.createTextNode(" "));
+    hand.appendChild(get_card_img(owner, card.src, card.alt));
+}
+
+function card_on_click(event){
+    if(event.target.dataset.owner === "me" && event.target.dataset.id === "joker"){
+        if(confirm("조커 카드를 패에서 버릴까요?")){
+            axios({
+                method: "GET",
+                url: api.joker
+            }).then((resp) => {
+                if(resp.data.game == "ok"){
+                    if(resp.data.joker === true){
+                        event.target.remove();
+                        document.getElementById("my_total").innerText = resp.data.total;
+
+                        alert("버렸습니다!");
+                    } else {
+                        location.reload();
+                    }
+                }
+            }).catch((err) => {
+                console.log(err);
+                window.alert("오류가 발생했습니다. 버튼을 다시 눌러주십시오.");
+            });
+        }
+    }
+}
+
 function call_stand(){
     axios({
         method: "GET",
@@ -11,14 +63,7 @@ function call_stand(){
     }).then((resp) => {
         if(resp.data.game == "end"){
             document.getElementById("your_hand").innerHTML = "";
-            resp.data.you.hand.forEach((card) => {
-                let img = document.createElement("img");
-                img.setAttribute("src", cards[card.src]);
-                img.setAttribute("alt", card.alt);
-
-                document.getElementById("your_hand").appendChild(document.createTextNode(" "));
-                document.getElementById("your_hand").appendChild(img);
-            });
+            resp.data.you.hand.forEach((card) => appendCard("you", card));
 
             document.getElementById("winning_rate_text").innerText=resp.data.count.winning_rate + "%";
 
@@ -55,22 +100,11 @@ hit.addEventListener("click", () => {
     }).then((resp) => {
         if(resp.data.game == "ok"){
             if(resp.data.you){
-                let img = document.createElement("img");
-                img.setAttribute("src", cards['back']);
-                img.setAttribute("alt", "Hidden Card");
-
-                document.getElementById("your_hand").appendChild(document.createTextNode(" "));
-                document.getElementById("your_hand").appendChild(img);
-
-                // cant check your total
+                appendCard("you", {src: "back", alt: "Hidden Card"});
+                // cant check total
             }
 
-            let me = document.createElement("img");
-            me.setAttribute("src", cards[resp.data.me.src]);
-            me.setAttribute("alt", resp.data.me.alt);
-            document.getElementById("my_hand").appendChild(document.createTextNode(" "));
-            document.getElementById("my_hand").appendChild(me);
-
+            appendCard("me", resp.data.me);
             document.getElementById("my_total").innerText = resp.data.me.total;
         }
         else if(resp.data.game == "not found"){
@@ -80,13 +114,7 @@ hit.addEventListener("click", () => {
             call_stand();
         }
         else if(resp.data.game == "bust with new card"){
-            let me = document.createElement("img");
-            me.setAttribute("src", cards[resp.data.me.src]);
-            me.setAttribute("alt", resp.data.me.alt);
-
-            document.getElementById("my_hand").appendChild(document.createTextNode(" "));
-            document.getElementById("my_hand").appendChild(me);
-
+            appendCard("me", resp.data.me);
             document.getElementById("my_total").innerText = resp.data.me.total;
 
             call_stand();
@@ -105,25 +133,11 @@ reset.addEventListener("click", function(){
     }).then((resp) => {
         document.getElementById("your_total").innerText = resp.data.you.total;
         document.getElementById("your_hand").innerHTML = "";
-        resp.data.you.hand.forEach((card) => {
-            let img = document.createElement("img");
-            img.setAttribute("src", cards[card.src]);
-            img.setAttribute("alt", card.alt);
-
-            document.getElementById("your_hand").appendChild(document.createTextNode(" "));
-            document.getElementById("your_hand").appendChild(img);
-        });
+        resp.data.you.hand.forEach((card) => appendCard("you", card));
 
         document.getElementById("my_total").innerText = resp.data.me.total;
         document.getElementById("my_hand").innerHTML = "";
-        resp.data.me.hand.forEach((card) => {
-            let img = document.createElement("img");
-            img.setAttribute("src", cards[card.src]);
-            img.setAttribute("alt", card.alt);
-
-            document.getElementById("my_hand").appendChild(document.createTextNode(" "));
-            document.getElementById("my_hand").appendChild(img);
-        });
+        resp.data.me.hand.forEach((card) => appendCard("me", card));
 
         document.body.classList.remove("is-clipped");
         document.getElementById("showGameStatus").classList.remove("is-active");
