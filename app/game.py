@@ -2,8 +2,8 @@ from random import shuffle
 
 from .nickname import get_nickname
 
-from .config import Game
-from .config import Joker
+from app.config import Game
+from app.config import Joker
 
 
 def get_card_deck() -> list:
@@ -16,16 +16,6 @@ def get_card_deck() -> list:
 
 
 def get_dummy_session(your_name: str = None, my_name: str = None, total: int = 0, win: int = 0) -> dict:
-    if Game.use_nickname is True:
-        if your_name is None:
-            your_name = get_nickname()
-
-        if my_name is None:
-            my_name = get_nickname()
-    else:
-        your_name = ""
-        my_name = ""
-
     card = get_card_deck()
     shuffle(card)
 
@@ -38,12 +28,12 @@ def get_dummy_session(your_name: str = None, my_name: str = None, total: int = 0
     return {
         "card": card,
         "you": {
-            "name": your_name,
+            "name": your_name if your_name is not None else get_nickname(),
             "hand": you,
             "stand": False
         },
         "me": {
-            "name": my_name,
+            "name": my_name if my_name is not None else get_nickname(),
             "hand": me,
         },
         "count": {

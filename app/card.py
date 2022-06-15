@@ -1,13 +1,11 @@
-
-from .config import Card
-from .config import Joker
+from app.config import Card
+from app.config import Joker
 
 
 def get_display_card_name(card: str) -> str:
     try:
         s, n = card
     except ValueError:
-        # too many values to unpack
         return "Joker"
 
     s = {

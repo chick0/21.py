@@ -13,7 +13,6 @@ GAME_SESSION_ID = "21"
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = token_bytes(32)
-    app.config['SESSION_COOKIE_NAME'] = "s"
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 
@@ -39,8 +38,7 @@ def create_app():
         return Response(
             "\n".join([
                 'User-agent: *',
-                'Allow: /$',
-                'Disallow: /'
+                'Allow: /'
             ]),
             mimetype="text/plain"
         )
